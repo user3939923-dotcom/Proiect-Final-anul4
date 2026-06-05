@@ -361,5 +361,50 @@ namespace RestoPro.Data
                 return result != null ? (int?)Convert.ToInt32(result) : null;
             }
         }
+        public static List<RaportMasa> GetRaportMese()
+        {
+            var list = new List<RaportMasa>();
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "SELECT m.NumarMasa, m.Zona, " +
+                    "COUNT(c.IdComanda) AS NrComenzi, " +
+                    "SUM(CASE WHEN c.StatusPlata='Achitat' " +
+                    "    THEN p.Pret * c.Cantitate ELSE 0 END) " +
+                    "    AS TotalAchitat " +
+                    "FROM Masa m " +
+                    "LEFT JOIN Comanda c ON m.IdMasa = c.IdMasa " +
+                    "LEFT JOIN Produs p ON c.IdProdus = p.IdProdus " +
+                    "GROUP BY m.IdMasa, m.NumarMasa, m.Zona " +
+                    "ORDER BY TotalAchitat DESC", conn);
+                using (var r = cmd.ExecuteReader())
+                    while (r.Read())
+                        list.Add(new RaportMasa
+                        {
+                            NumarMasa = r.GetInt32(0),
+                            Zona = r.GetString(1),
+                            NrComenzi = r.GetInt32(2),
+                            TotalAchitat = r.GetDecimal(3)
+                        });
+            }
+            return list;
+        }
+
+        public static string GetProdusCelMaiVandut()
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "SELECT TOP 1 p.Denumire " +
+                    "FROM Comanda c " +
+                    "JOIN Produs p ON c.IdProdus = p.IdProdus " +
+                    "GROUP BY p.IdProdus, p.Denumire " +
+                    "ORDER BY SUM(c.Cantitate) DESC", conn);
+                var result = cmd.ExecuteScalar();
+                return result?.ToString() ?? "N/A";
+            }
+        }
     }
 }
