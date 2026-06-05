@@ -1,0 +1,67 @@
+﻿<Window x:Class="RestoPro.Views.ComandaAddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Adaugă Comandă" Height="320" Width="380"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="110"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                   Text="Adaugă Comandă Nouă"
+                   FontSize="16" FontWeight="Bold"
+                   Margin="0,0,0,15"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Masă:"
+                   VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="1" Grid.Column="1"
+                  x:Name="CbMasa" Height="28"
+                  DisplayMemberPath="NumarMasa"
+                  SelectedValuePath="IdMasa"
+                  Margin="0,0,0,10"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Produs:"
+                   VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="2" Grid.Column="1"
+                  x:Name="CbProdus" Height="28"
+                  DisplayMemberPath="Denumire"
+                  SelectedValuePath="IdProdus"
+                  Margin="0,0,0,10"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="0"
+                   Text="Cantitate:" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="3" Grid.Column="1"
+                 x:Name="TxtCantitate" Height="28" Text="1"
+                 Margin="0,0,0,10"/>
+
+        <TextBlock Grid.Row="4" Grid.Column="0"
+                   Text="Status Plată:" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="4" Grid.Column="1"
+                  x:Name="CbStatus" Height="28"
+                  Margin="0,0,0,15">
+            <ComboBoxItem Content="Neachitat"/>
+            <ComboBoxItem Content="Achitat"/>
+        </ComboBox>
+
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Salvează" Width="90" Height="30"
+                    Margin="0,0,10,0" Click="BtnSave_Click"
+                    Background="#27AE60" Foreground="White"/>
+            <Button Content="Anulează" Width="90" Height="30"
+                    Click="BtnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
