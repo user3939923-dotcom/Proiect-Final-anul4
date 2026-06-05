@@ -45,7 +45,14 @@ namespace RestoPro.Views
                     statusItem == "Toate" ? null : statusItem);
         }
 
-        
+        private void CbFilter_Changed(object sender,
+        SelectionChangedEventArgs e) => LoadData();
+
+        private void DgComenzi_SelectionChanged(object sender,
+        SelectionChangedEventArgs e)
+        {
+            BtnDelete.IsEnabled = DgComenzi.SelectedItem != null;
+        }
 
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
