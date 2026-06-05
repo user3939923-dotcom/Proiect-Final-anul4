@@ -1,0 +1,65 @@
+﻿<Window x:Class="RestoPro.Views.ProdusEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Produs" Height="320" Width="380"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="110"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                   x:Name="TitleText" Text="Adaugă Produs"
+                   FontSize="16" FontWeight="Bold"
+                   Margin="0,0,0,15"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Denumire:"
+                   VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="1"
+                 x:Name="TxtDenumire" Height="28"
+                 Margin="0,0,0,10"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Categorie:"
+                   VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" x:Name="CbCategorie"
+                  Height="28" Margin="0,0,0,10">
+            <ComboBoxItem Content="Supe"/>
+            <ComboBoxItem Content="Salate"/>
+            <ComboBoxItem Content="Feluri Principale"/>
+            <ComboBoxItem Content="Deserturi"/>
+            <ComboBoxItem Content="Băuturi"/>
+        </ComboBox>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Preț (lei):"
+                   VerticalAlignment="Center"/>
+        <TextBox Grid.Row="3" Grid.Column="1"
+                 x:Name="TxtPret" Height="28" Margin="0,0,0,10"/>
+
+        <TextBlock Grid.Row="4" Grid.Column="0"
+                   Text="Disponibil:" VerticalAlignment="Center"/>
+        <CheckBox Grid.Row="4" Grid.Column="1"
+                  x:Name="ChkDisponibil"
+                  VerticalAlignment="Center"
+                  IsChecked="True" Margin="0,0,0,15"/>
+
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Salvează" Width="90" Height="30"
+                    Margin="0,0,10,0" Click="BtnSave_Click"
+                    Background="#27AE60" Foreground="White"/>
+            <Button Content="Anulează" Width="90" Height="30"
+                    Click="BtnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
