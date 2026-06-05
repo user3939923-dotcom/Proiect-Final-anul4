@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Protocols;
+using System.Configuration;
 
 namespace RestoPro.Data
 {
-    internal class DatabaseHelper
+    public class DatabaseHelper
     {
+        private static string _connectionString =
+            ConfigurationManager.ConnectionStrings["RestoPro"]
+            .ConnectionString;
+
+        public static SqlConnection GetConnection()
+        {
+            return new SqlConnection(_connectionString);
+        }
     }
 }
