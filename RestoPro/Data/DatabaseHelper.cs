@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using RestoPro.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Windows;
@@ -259,6 +260,105 @@ namespace RestoPro.Data
                     conn);
                 cmd.Parameters.AddWithValue("@id", id);
                 return (int)cmd.ExecuteScalar() == 0;
+            }
+        }
+        public static List<Comanda> FilterComenzi(int? idMasa,
+    string status)
+        {
+            var list = new List<Comanda>();
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var sql =
+                    "SELECT c.IdComanda, c.IdMasa, c.IdProdus, " +
+                    "c.DataComanda, c.Cantitate, c.StatusPlata, " +
+                    "m.NumarMasa, p.Denumire, p.Pret " +
+                    "FROM Comanda c " +
+                    "JOIN Masa m ON c.IdMasa = m.IdMasa " +
+                    "JOIN Produs p ON c.IdProdus = p.IdProdus " +
+                    "WHERE 1=1";
+                if (idMasa.HasValue) sql += " AND c.IdMasa=@m";
+                if (status != null) sql += " AND c.StatusPlata=@s";
+                sql += " ORDER BY c.DataComanda DESC";
+
+                var cmd = new SqlCommand(sql, conn);
+                if (idMasa.HasValue)
+                    cmd.Parameters.AddWithValue("@m", idMasa.Value);
+                if (status != null)
+                    cmd.Parameters.AddWithValue("@s", status);
+
+                using (var r = cmd.ExecuteReader())
+                    while (r.Read())
+                        list.Add(new Comanda
+                        {
+                            IdComanda = r.GetInt32(0),
+                            IdMasa = r.GetInt32(1),
+                            IdProdus = r.GetInt32(2),
+                            DataComanda = r.GetDateTime(3),
+                            Cantitate = r.GetInt32(4),
+                            StatusPlata = r.GetString(5),
+                            NumarMasa = r.GetInt32(6).ToString(),
+                            DenumireProdus = r.GetString(7),
+                            PretProdus = r.GetDecimal(8)
+                        });
+            }
+            return list;
+        }
+
+        public static void AddComanda(Comanda c)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "INSERT INTO Comanda " +
+                    "(IdMasa, IdProdus, DataComanda, Cantitate, StatusPlata)" +
+                    " VALUES (@m, @p, @d, @c, @s)", conn);
+                cmd.Parameters.AddWithValue("@m", c.IdMasa);
+                cmd.Parameters.AddWithValue("@p", c.IdProdus);
+                cmd.Parameters.AddWithValue("@d", c.DataComanda);
+                cmd.Parameters.AddWithValue("@c", c.Cantitate);
+                cmd.Parameters.AddWithValue("@s", c.StatusPlata);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void DeleteComanda(int id)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "DELETE FROM Comanda WHERE IdComanda=@id", conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static bool ComandaExista(int idMasa, int idProdus)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "SELECT COUNT(*) FROM Comanda " +
+                    "WHERE IdMasa=@m AND IdProdus=@p", conn);
+                cmd.Parameters.AddWithValue("@m", idMasa);
+                cmd.Parameters.AddWithValue("@p", idProdus);
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
+
+        public static int? GetMasaIdByNr(int numar)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "SELECT IdMasa FROM Masa WHERE NumarMasa=@n", conn);
+                cmd.Parameters.AddWithValue("@n", numar);
+                var result = cmd.ExecuteScalar();
+                return result != null ? (int?)Convert.ToInt32(result) : null;
             }
         }
     }
