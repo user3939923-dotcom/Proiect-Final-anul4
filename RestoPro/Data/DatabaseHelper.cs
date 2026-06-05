@@ -154,5 +154,81 @@ namespace RestoPro.Data
             }
             return list;
         }
+        public static List<string> GetCategorii()
+        {
+            var list = new List<string>();
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "SELECT DISTINCT Categorie FROM Produs ORDER BY Categorie",
+                    conn);
+                using (var r = cmd.ExecuteReader())
+                    while (r.Read()) list.Add(r.GetString(0));
+            }
+            return list;
+        }
+
+
+
+        public static void AddProdus(Produs p)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "INSERT INTO Produs " +
+                    "(Denumire, Categorie, Pret, Disponibil) " +
+                    "VALUES (@d, @c, @p, @disp)", conn);
+                cmd.Parameters.AddWithValue("@d", p.Denumire);
+                cmd.Parameters.AddWithValue("@c", p.Categorie);
+                cmd.Parameters.AddWithValue("@p", p.Pret);
+                cmd.Parameters.AddWithValue("@disp", p.Disponibil);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void UpdateProdus(Produs p)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "UPDATE Produs SET Denumire=@d, Categorie=@c, " +
+                    "Pret=@p, Disponibil=@disp WHERE IdProdus=@id",
+                    conn);
+                cmd.Parameters.AddWithValue("@d", p.Denumire);
+                cmd.Parameters.AddWithValue("@c", p.Categorie);
+                cmd.Parameters.AddWithValue("@p", p.Pret);
+                cmd.Parameters.AddWithValue("@disp", p.Disponibil);
+                cmd.Parameters.AddWithValue("@id", p.IdProdus);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void DeleteProdus(int id)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "DELETE FROM Produs WHERE IdProdus=@id", conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static bool CanDeleteProdus(int id)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var cmd = new SqlCommand(
+                    "SELECT COUNT(*) FROM Comanda WHERE IdProdus=@id",
+                    conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                return (int)cmd.ExecuteScalar() == 0;
+            }
+        }
     }
 }
