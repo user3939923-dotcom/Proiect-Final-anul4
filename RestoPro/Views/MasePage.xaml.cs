@@ -60,6 +60,7 @@ namespace RestoPro.Views
             }
         }
 
+        //Search_Button
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
             => LoadData(TxtSearch.Text.Trim());
 
