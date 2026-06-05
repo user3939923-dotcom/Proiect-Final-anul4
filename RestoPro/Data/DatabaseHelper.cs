@@ -168,8 +168,39 @@ namespace RestoPro.Data
             }
             return list;
         }
+        public static List<Produs> FilterProduse(string categorie,
+        string search)
+        {
+            var list = new List<Produs>();
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var sql = "SELECT IdProdus, Denumire, Categorie, Pret, " +
+                "Disponibil FROM Produs WHERE 1=1";
+                if (!string.IsNullOrEmpty(categorie))
+                    sql += " AND Categorie = @cat";
+                if (!string.IsNullOrEmpty(search))
+                    sql += " AND Denumire LIKE @s";
 
+                var cmd = new SqlCommand(sql, conn);
+                if (!string.IsNullOrEmpty(categorie))
+                    cmd.Parameters.AddWithValue("@cat", categorie);
+                if (!string.IsNullOrEmpty(search))
+                    cmd.Parameters.AddWithValue("@s", $"%{search}%");
 
+                using (var r = cmd.ExecuteReader())
+                    while (r.Read())
+                        list.Add(new Produs
+                        {
+                            IdProdus = r.GetInt32(0),
+                            Denumire = r.GetString(1),
+                            Categorie = r.GetString(2),
+                            Pret = r.GetDecimal(3),
+                            Disponibil = r.GetBoolean(4)
+                        });
+            }
+            return list;
+        }
 
         public static void AddProdus(Produs p)
         {

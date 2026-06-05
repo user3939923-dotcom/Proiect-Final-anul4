@@ -39,7 +39,8 @@ namespace RestoPro.Views
             BtnEdit.IsEnabled = sel;
             BtnDelete.IsEnabled = sel;
         }
-
+        private void CbFilter_Changed(object sender,
+        SelectionChangedEventArgs e) => LoadData();
 
         private void BtnSearch_Click(object sender,
             RoutedEventArgs e) => LoadData();
